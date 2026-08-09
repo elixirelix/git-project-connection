@@ -2,10 +2,9 @@ from discord.ext import commands
 from dotenv import load_dotenv
 from os import getenv
 import discord
-
-_PREFIX = "?"
-
 load_dotenv()
+
+_PREFIX = str(getenv("PREFIX")).strip()
 
 intents = discord.Intents.default()
 intents.members = True
@@ -26,7 +25,7 @@ async def on_ready():
 async def on_message(message):
     content = message.content
     
-    if content.count(_PREFIX) > 0 and content[0] == _PREFIX:
+    if content.count(_PREFIX) > 0 and content[:len(_PREFIX)] == _PREFIX:
         await bot.process_commands(message)
         return
     
