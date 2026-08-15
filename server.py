@@ -8,13 +8,13 @@ app = FastAPI()
 
 @app.post("/github/push")
 async def push(data: dict):
-    logger.info("New request on push method")
+    logger.info("New request on push method", extra={"file": "server.py"})
 
     repo_url, repo_id, repo_name = data["repository"]["html_url"], data["repository"]["id"], data["repository"]["name"]
     commit_list = data["commits"]
 
     if len(commit_list) < 1:
-        logger.debug("No commit on the push")
+        logger.debug("No commit on the push", extra={"file": "server.py"})
         return {"status": "ok"}
 
     avatar = f"https://avatars.githubusercontent.com/u/{data["sender"]["id"]}?v=4"
@@ -52,7 +52,7 @@ Commited by: {commits["committer"]["name"]}
 
     channel = bot.get_channel(int(getenv("CHANNEL_MESSAGE_ID")))
     await channel.send(embed=embed_push)
-    logger.info(f"Sucessfully push commits info on {getenv("CHANNEL_MESSAGE_ID")}")
+    logger.info(f"Sucessfully push commits info on {getenv("CHANNEL_MESSAGE_ID")}", extra={"file": "server.py"})
 
     return {"status": "ok"}
 
@@ -66,7 +66,7 @@ async def root(req: dict):
     return {"status": "ok"}
 
 async def start_server():
-    logger.info("Starting FastAPI Server")
+    logger.info("Starting FastAPI Server", extra={"file": "server.py"})
 
     config = Config(
         app,
