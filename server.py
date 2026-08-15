@@ -64,7 +64,7 @@ async def start_server():
         app,
         host="0.0.0.0",
         port=8000,
-        log_level=None
+        log_config=None
     )
     server = Server(config)
     await server.serve()
