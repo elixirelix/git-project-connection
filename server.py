@@ -1,3 +1,4 @@
+from os import getenv
 from uvicorn import Config, Server
 from fastapi import FastAPI
 from bot import bot
@@ -8,7 +9,7 @@ async def push(data: dict):
     repo_url, repo_id = data["repository"]["html_url"], data["repository"]["id"]
     forced_push = data["forced"]
     
-    channel = bot.get_channel(1535661127185469503)
+    channel = bot.get_channel(getenv("CHANNEL_MESSAGE_ID"))
     await channel.send("test")
     return {"status": "ok"}
 
