@@ -10,7 +10,6 @@ async def push(data: dict):
     repo_url, repo_id, repo_name = data["repository"]["html_url"], data["repository"]["id"], data["repository"]["name"]
     commit_list = data["commits"]
 
-    forced_push = data["forced"]
     avatar = f"https://avatars.githubusercontent.com/u/{data["sender"]["id"]}?v=4"
     repo_infos = f"""Repository Informations:
 Repository URl: {repo_url}
@@ -19,12 +18,10 @@ Total Commit: {len(commit_list)}
 Pushed by: {data["sender"]["login"]}
     """
     
-    print(forced_push)
-
     embed_push = Embed(
         title=f"[NEW PUSH] - {repo_name}",
         description=repo_infos,
-        color=Colour.blue() if not forced_push else Colour.dark_red()
+        color=Colour.blue()
     )
     
     for commits in commit_list:
