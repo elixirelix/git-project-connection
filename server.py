@@ -1,16 +1,21 @@
 from uvicorn import Config, Server
-from fastapi import FastAPI
 from discord import Embed, Colour
+from lib.logger import logger
+from fastapi import FastAPI
 from os import getenv
 from bot import bot
 app = FastAPI()
 
 @app.post("/github/push")
 async def push(data: dict):
+    logger.info("New request on push method")
+
     repo_url, repo_id, repo_name = data["repository"]["html_url"], data["repository"]["id"], data["repository"]["name"]
     commit_list = data["commits"]
-    
-    if len(commit_list) < 1: return {"status": "ok"}
+
+    if len(commit_list) < 1:
+        logger.debug("No commit on the push")
+        return {"status": "ok"}
 
     avatar = f"https://avatars.githubusercontent.com/u/{data["sender"]["id"]}?v=4"
     repo_infos = f"""Repository Informations:
@@ -47,6 +52,7 @@ Commited by: {commits["committer"]["name"]}
 
     channel = bot.get_channel(int(getenv("CHANNEL_MESSAGE_ID")))
     await channel.send(embed=embed_push)
+    logger.info(f"Sucessfully push commits info on {getenv("CHANNEL_MESSAGE_ID")}")
 
     return {"status": "ok"}
 
@@ -60,6 +66,8 @@ async def root(req: dict):
     return {"status": "ok"}
 
 async def start_server():
+    logger.info("Starting FastAPI Server")
+
     config = Config(
         app,
         host="0.0.0.0",
