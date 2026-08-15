@@ -9,6 +9,8 @@ app = FastAPI()
 async def push(data: dict):
     repo_url, repo_id, repo_name = data["repository"]["html_url"], data["repository"]["id"], data["repository"]["name"]
     commit_list = data["commits"]
+    
+    if len(commit_list) < 1: return {"status": "ok"}
 
     avatar = f"https://avatars.githubusercontent.com/u/{data["sender"]["id"]}?v=4"
     repo_infos = f"""Repository Informations:
@@ -61,7 +63,8 @@ async def start_server():
     config = Config(
         app,
         host="0.0.0.0",
-        port=8000
+        port=8000,
+        log_level=None
     )
     server = Server(config)
     await server.serve()
