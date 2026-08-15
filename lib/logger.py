@@ -2,16 +2,25 @@ from logging import getLogger, DEBUG, Formatter, FileHandler, StreamHandler, Fil
 from datetime import datetime
 from os import getenv
 
+
 class Filtering(Filter):
     def filter(self, record):
         return record.name == "root"
 
+class CustomFormatter(Formatter):
+    def format(self, record):
+        if hasattr(record, "file"):
+            self._style._fmt = "[%(asctime)s] [%(levelname)s] [%(name)s] [%(file)s] [%(message)s]"
+        else:
+            self._style._fmt = "[%(asctime)s] [%(levelname)s] [%(name)s] [%(message)s]"
+
+        return super().format(record)
+
+
 logger = getLogger(getenv("LOGGER_NAME"))
 logger.setLevel(DEBUG)
 
-formatter = Formatter(
-    "[%(asctime)s] [%(levelname)s] [%(name)s] [%(message)s]"
-)
+formatter = CustomFormatter()
 
 file_handler = FileHandler(
     f'logs/{str(datetime.now()).split(" ")[0]}.log'
