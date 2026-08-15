@@ -18,6 +18,8 @@ Repository ID: {repo_id}
 Total Commit: {len(commit_list)}
 Pushed by: {data["sender"]["login"]}
     """
+    
+    print(forced_push)
 
     embed_push = Embed(
         title=f"[NEW PUSH] - {repo_name}",
@@ -33,6 +35,7 @@ Add: {"``" + "`` ``".join(commit_add) + "``" if len(commit_add) > 0 else "No fil
 Modified: {"``" + "`` ``".join(commit_modified) + "``" if len(commit_modified) > 0 else "No files"}
 Remove: {"``" + "`` ``".join(commit_remove) + "``" if len(commit_remove) > 0 else "No files"}
 
+Message: ``{commits["message"]}``
 Commit time: {commits["timestamp"]}
 Commited by: {commits["committer"]["name"]}
 """
