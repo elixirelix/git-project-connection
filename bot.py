@@ -28,8 +28,6 @@ async def on_message(message):
     if content.count(_PREFIX) > 0 and content[:len(_PREFIX)] == _PREFIX:
         await bot.process_commands(message)
         return
-    
-    print(message)
 
 async def start_bot():
     await bot.start(getenv("TOKEN"))
