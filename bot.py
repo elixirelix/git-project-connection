@@ -1,5 +1,6 @@
 from discord.ext import commands
 from dotenv import load_dotenv
+from lib.logger import logger
 from os import getenv
 import discord
 load_dotenv()
@@ -19,7 +20,7 @@ async def test(ctx):
 @bot.event
 async def on_ready():
     assert bot.user is not None
-    print(f'Logged in as {bot.user} (ID: {bot.user.id})')
+    logger.info(f'Logged in as {bot.user} (ID: {bot.user.id})', extra={"file": "bot.py"})
 
 @bot.event
 async def on_message(message):
