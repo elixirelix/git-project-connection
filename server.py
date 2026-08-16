@@ -56,10 +56,6 @@ Commited by: {commits["committer"]["name"]}
 
     return {"status": "ok"}
 
-@app.get("/")
-async def root():
-    return {"status": "ok"}
-
 @app.post("/")
 async def root(req: dict):
     print(req)
