@@ -1,5 +1,6 @@
 from uvicorn import Config, Server
 from discord import Embed, Colour
+from datetime import datetime
 from lib.logger import logger
 from fastapi import FastAPI
 from os import getenv
@@ -110,7 +111,7 @@ async def start_server():
     config = Config(
         app,
         host="0.0.0.0",
-        port=8000,
+        port=int(getenv("LISTENING_FASTAPI_PORT")),
         log_config=None
     )
     server = Server(config)
