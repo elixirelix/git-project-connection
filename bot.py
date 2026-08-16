@@ -1,9 +1,7 @@
 from discord.ext import commands
-from dotenv import load_dotenv
 from lib.logger import logger
 from os import getenv
 import discord
-load_dotenv()
 
 _PREFIX = str(getenv("PREFIX")).strip()
 
