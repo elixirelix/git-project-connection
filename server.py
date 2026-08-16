@@ -56,6 +56,49 @@ Commited by: {commits["committer"]["name"]}
 
     return {"status": "ok"}
 
+@app.post("/github/tags")
+async def tags(data: dict):
+    logger.info("New request on tag method", extra={"file": "server.py"})
+
+    ref_type = data["ref_type"]
+    if ref_type != "tag":
+        logger.warning("No ref_type to tag", extra={"file": "server.py"})
+        return {"status": "nok"}
+
+    tag_name = data["ref"]
+    tag_branch = data["master_branch"]
+    user_pusher = data["pusher_type"]
+    repo_url, repo_id, repo_name = data["repository"]["html_url"], data["repository"]["id"], data["repository"]["name"]
+
+    avatar = f"https://avatars.githubusercontent.com/u/{data["sender"]["id"]}?v=4"
+    repo_infos = f"""Repository Informations:
+Repository URl: {repo_url}
+Repository ID: {repo_id}
+Pushed by: {data["sender"]["login"]}
+    """
+    
+    embed_tags = Embed(
+        title=f"[NEW TAG] - {repo_name}",
+        description=repo_infos,
+        color=Colour.blue()
+    )
+    
+    tag_infos =  f"""Tag Name: ``{tag_name}``
+Tag Branch: {tag_branch}
+Taged by: {data["sender"]["login"]} - {"Utilisateur" if user_pusher == "user" else data["pusher_type"]}
+"""
+    embed_tags.add_field(name=f"{tag_name}", value=tag_infos)
+
+    embed_tags.set_author(name=f"Sender Commit - {data["sender"]["login"]}", icon_url=avatar)
+    embed_tags.set_thumbnail(url=f"https://opengraph.githubassets.com/1/{data["repository"]["owner"]["login"]}/{repo_name}")
+    embed_tags.set_footer(text=f"{str(datetime.now()).split('.')[0]}")
+
+    channel = bot.get_channel(int(getenv("CHANNEL_MESSAGE_ID")))
+    await channel.send(embed=embed_tags)
+    logger.info(f"Sucessfully push commits info on {getenv("CHANNEL_MESSAGE_ID")}", extra={"file": "server.py"})
+
+    return {"status": "ok"}
+
 @app.post("/")
 async def root(req: dict):
     print(req)
